@@ -14,6 +14,7 @@
 
         var resultContent = [];
         lines.forEach(function(element, index){
+          if(index>100) return;
           var arr = element.split(",");
 
           var obj = {
