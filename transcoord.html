@@ -27,6 +27,7 @@
 
           var api = "https://apis.daum.net/local/geo/transcoord?";
           var url = api + $.param(obj) + "&callback=?";
+          console.log(url);
           $.ajax( url )
           .done(function(data) {
             console.log(data);
