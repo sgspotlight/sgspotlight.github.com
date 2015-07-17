@@ -27,14 +27,11 @@
 
           var api = "https://apis.daum.net/local/geo/transcoord?";
           var url = api + $.param(obj) + "&callback=?";
-          console.log(url);
           $.getJSON(url, function(data) {
-            console.log(data);
+            $("progress").attr("value", resultContent.length);
             arr[3] = data.y;
             arr[4] = data.x;
             resultContent += arr + "\n";
-            console.log(resultContent);
-
             if(resultContent.length == lines.length){
               var BOM = "\uFEFF";
               var    csvData = BOM + resultContent;
