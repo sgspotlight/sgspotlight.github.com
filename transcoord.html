@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <title>수요조사 결과</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://joohyuck.github.io/FileSaver.min.js"></script>
+    <script src="http://joohyuck.github.io/FileSaver.min.js"></script>
     <script src="https://apis.daum.net/maps/maps3.js?apikey=5de31307175306038b2cd698cec96253adf6ef60&libraries=services"></script>
     <script type="text/javascript">
 
-      $.get("https://joohyuck.github.io/file/seoul_route_station.csv",function(data){
+      $.get("http://joohyuck.github.io/file/seoul_route_station.csv",function(data){
+        alert(typeof(data));
         alert("sdsd");
         console.log(data);
         var lines = data.split("\n");
