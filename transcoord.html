@@ -19,8 +19,8 @@
 
           var obj = {
             apikey :"fe61c4a1956aac0b7b86a8d1e648409d2db9abb0",
-            x: arr[3],
-            y: arr[4],
+            x: arr[4],
+            y: arr[3],
             fromCoord: "TM",
             toCoord: "WGS84",
             output: "json"
@@ -28,6 +28,7 @@
 
           var api = "https://apis.daum.net/local/geo/transcoord?";
           var url = api + $.param(obj) + "&callback=?";
+          console.log(url);
           $.getJSON(url, function(data) {
             console.log(data);
             arr[3] = data.y;
