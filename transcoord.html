@@ -12,6 +12,7 @@
         var lines = data.split("\n");
         $("progress").attr("max", lines.length);
 
+        var resultContent ="";
         lines.forEach(function(element, index){
           if( index > 2 ) return;
           var arr = element.split(",");
@@ -29,19 +30,17 @@
           var url = api + $.param(obj) + "&callback=?";
           $.getJSON(url, function(data) {
             console.log(data);
+            arr[3] = data.y;
+            arr[4] = data.x;
+            resultContent += arr;
+            if(resultContent.length == lines.length){
+              var BOM = "\uFEFF";
+              var    csvData = BOM + resultContent;
+              var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+              saveAs(blob, "transcoord.csv");
+            }
           });
         });
-/*
-        var resultContent ="";
-        stationsArray.forEach(function(element){
-          resultContent += element+"\n";
-        });
-
-        var BOM = "\uFEFF";
-        var    csvData = BOM + resultContent;
-        var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-        saveAs(blob, "transcoord.csv");
-        */
       }); 
 
     </script>
