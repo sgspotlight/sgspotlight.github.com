@@ -37,12 +37,7 @@
                               wtmY, 
                               daum.maps.services.Coords.WTM, // 변환을 위해 입력한 좌표계 입니다
                               daum.maps.services.Coords.WGS84, // 변환 결과로 받을 좌표계 입니다 
-                              transCoordCB(function(result){
-                                arr[3] = result.y;
-                                arr[4] = result.x;
-                                resultContent.push(arr);
-                                console.log(resultContent);
-                              })
+                              transCoordCB
                               ); // 변환 결과를 받을 콜백합수 입니다
 
           // 좌표 변환 결과를 받아서 처리할 콜백함수 입니다.
@@ -60,9 +55,9 @@
         });
       });
 
-      function transCoordCB(status, result , callback) {
+      function transCoordCB(status, result) {
           if (status === daum.maps.services.Status.OK) {
-            callback(result);
+            resultContent.push(result.y+","+result.x);
           }
           if(resultContent.length == 6){
             var BOM = "\uFEFF";
