@@ -12,7 +12,7 @@
         var lines = data.split("\n");
         $("progress").attr("max", lines.length);
 
-        var resultContent ="";
+        var resultContent = [];
         lines.forEach(function(element, index){
           if( index > 2 ) return;
           var arr = element.split(",");
@@ -32,7 +32,8 @@
             console.log(data);
             arr[3] = data.y;
             arr[4] = data.x;
-            resultContent += arr;
+            resultContent += arr + "\n";
+            console.log(resultContent);
             if(resultContent.length == lines.length){
               var BOM = "\uFEFF";
               var    csvData = BOM + resultContent;
