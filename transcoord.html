@@ -14,7 +14,7 @@
 
         var resultContent = [];
         lines.forEach(function(element, index){
-          if(index>100) return;
+          if(index>10) return;
           var arr = element.split(",");
 
           var obj = {
@@ -28,6 +28,7 @@
 
           var api = "https://apis.daum.net/local/geo/transcoord?";
           var url = api + $.param(obj) + "&callback=?";
+          console.log(url);
           $.getJSON(url, function(data) {
             console.log(data);
             $("progress").attr("value", resultContent.length);
