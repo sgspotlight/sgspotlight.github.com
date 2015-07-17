@@ -14,14 +14,13 @@
 
         var resultContent = [];
         lines.forEach(function(element, index){
-          if( index > 2 ) return;
           var arr = element.split(",");
 
           var obj = {
             apikey :"fe61c4a1956aac0b7b86a8d1e648409d2db9abb0",
             x: arr[3],
             y: arr[4],
-            fromCoord: "TM",
+            fromCoord: "WTM",
             toCoord: "WGS84",
             output: "json"
           }
@@ -35,6 +34,7 @@
             arr[4] = data.x;
             resultContent += arr + "\n";
             console.log(resultContent);
+
             if(resultContent.length == lines.length){
               var BOM = "\uFEFF";
               var    csvData = BOM + resultContent;
