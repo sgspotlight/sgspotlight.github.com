@@ -10,6 +10,7 @@
     <script type="text/javascript">
 
       $.get("https://joohyuck.github.io/file/seoul_route_station.csv",function(data){
+        console.log(data);
         var lines = data.split("\n");
         $("progress").attr("max", lines.length);
 
