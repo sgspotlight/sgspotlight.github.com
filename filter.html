@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="euc-kr">
+    <title>수요조사 결과</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/FileSaver.min.js"></script>
+    <script type="text/javascript">
+      $.get("/station201507032.txt",function(data){
+        var lines = data.split("^");
+        var array = [];
+        var resultArray = [];
+
+        lines.forEach(function(element, index){
+          array.push(element.split("|")[1]);
+        });
+
+        lines.forEach(function(element,index){
+          var num = 1;
+          num = array.indexOf(element.split("|")[1], index+1);
+          if(num > 0) {
+            if(Math.abs(element.split("|")[0]-lines[num].split("|")[0]) > 50 ){
+              resultArray.push(element);
+            }
+          } else {
+            resultArray.push(element);
+          }
+        });
+
+        var csvContent ="";
+        var region =['서울','수원','인천','용인','시흥','파주','의정부','안양','부천','하남','의왕','군포','오산','성남','광명','동두천','안산','화성','고양','김포','남양주','구리','포천','광주','과천'];
+        resultArray.forEach(function(element){
+          if(element.split("|")[7] && region.indexOf(element.split("|")[6]) >= 0) csvContent += element.split("|")+ "\n";
+        });
+
+        var BOM = "\uFEFF";
+        var    csvData = BOM + csvContent;
+        var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+        saveAs(blob, "myFile.csv");
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

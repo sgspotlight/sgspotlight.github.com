@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>수요조사 결과</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/FileSaver.min.js"></script>
+    <script type="text/javascript">
+
+      $.get("/file/seoul_route_station.csv",function(data){
+        var lines = data.split("\n");
+        $("progress").attr("max", lines.length);
+
+        lines.forEach(function(element, index){
+          if( index > 1000 ) return;
+          var arr = element.split(",");
+
+          var obj = {
+            apikey :"fe61c4a1956aac0b7b86a8d1e648409d2db9abb0",
+            x: arr[3],
+            y: arr[4],
+            fromCoord: "TM",
+            toCoord: "WGS84",
+            output: "json"
+          }
+
+          var api = "https://apis.daum.net/local/geo/transcoord?";
+          var url = api + $.param(obj);
+          $.ajax( url )
+          .done(function(data) {
+            console.log(data);
+          })
+          .fail(function(error) {
+            console.log(error);
+          })
+        });
+/*
+        var resultContent ="";
+        stationsArray.forEach(function(element){
+          resultContent += element+"\n";
+        });
+
+        var BOM = "\uFEFF";
+        var    csvData = BOM + resultContent;
+        var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+        saveAs(blob, "transcoord.csv");
+        */
+      }); 
+
+    </script>
+  </head>
+  <body>
+    <progress value="0" max="0"></progress>
+  </body>
+</html>
+
+
+

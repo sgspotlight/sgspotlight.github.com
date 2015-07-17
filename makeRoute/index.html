@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Polylines</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script src="/parse-1.4.2.min.js"></script>
+
+    <script type="text/javascript">
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    var map;
+    function initialize() {
+      var mapOptions = {
+        zoom: 11,
+        center: new google.maps.LatLng(37.350,127.1141)
+      };
+      map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+    }
+
+
+    Parse.initialize("eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B", "pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib");
+
+    var Route = Parse.Object.extend("preRoute");
+    var query = new Parse.Query(Route);
+
+    retrieveObjects(query,function(err,result){
+      result.forEach(function(element,index){
+        if(index == 0 || (index != 18) ) return;
+
+        console.log(element);
+        var stationList = [];
+        var arr = element.attributes.station;
+        arr.sort(function(a,b){
+            return a.order - b.order;
+        });
+        arr.forEach(function(el){
+          var loc = {'latitude': el.latitude,'longitude': el.longitude };
+          stationList.push(loc);
+        });
+        var endPoint = {'latitude':element.attributes.destLocation.latitude,'longitude':element.attributes.destLocation.longitude };
+        stationList.push(endPoint);
+
+        getPathArray(stationList, function(error, array){
+          var path=[];
+          var flightPlanCoordinates = [];
+          
+          array.forEach(function(element){
+              path.push([element[1],element[0]]);
+              var point = new google.maps.LatLng(element[1],element[0]);
+              flightPlanCoordinates.push(point);
+          });
+
+          element.set("path", path);
+          element.save();
+
+          var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: getRandomColor(),
+            strokeOpacity: 1.0,
+            strokeWeight: 4
+          });
+
+          flightPath.setMap(map);
+          
+        });
+      });
+    });
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function retrieveObjects (query, callback) {
+      query.find({
+        success: function (result) {
+          callback(null, result);
+        },
+        error: function (error) {
+          callback(error, null);
+        }
+      })
+    }
+
+    function getTmap(obj, callback){
+      var tmapAPI = "https://apis.skplanetx.com/tmap/routes?";
+      var url = tmapAPI + $.param(obj) + "&callback=?"
+      var endArray = 10000;
+      $.ajax( url )
+      .done(function(data) {
+        var geoPointLineArray = [];
+        data.features.forEach(function(element, index){
+          if(endArray < index) return;
+          if(element.geometry.type == "LineString"){
+            element.geometry.coordinates.forEach(function(el){
+              geoPointLineArray.push(el);
+            });
+          }
+          else{
+            //geoPointLineArray.push(element.geometry.coordinates);
+          }
+          if(element.properties.description == "도착") endArray=index;
+        });
+        callback(null, geoPointLineArray);
+      })
+      .fail(function(error) {
+        callback(error, null);
+      })
+    }
+
+
+    function getPathArray(inputArray, callback){
+      var copyArray = inputArray;
+      var resultArray = [];
+      var splitArray = [];
+      var num = 0;
+
+      splitArray[0] = copyArray.splice(0,7);
+      if(copyArray.length != 0){
+        copyArray.unshift(splitArray[0][6]);
+        splitArray[1] = copyArray;
+      }
+
+      splitArray.forEach(function(element){
+        console.log(element);
+        if(!element[0].latitude) return;
+        var passList = "";
+        for(var i=1; i<element.length-1 ; i++){
+          passList += element[i].longitude+","+element[i].latitude+"_";
+        }
+        var obj = {
+          appKey : "c0ca1d1f-5b29-3ba7-b2c9-a7abcb8f9b2e",
+          version : 1,
+          startX : element[0].longitude,
+          startY : element[0].latitude,
+          endX : element[element.length-1].longitude,
+          endY : element[element.length-1].latitude,
+          passList : passList,
+          reqCoordType : "WGS84GEO",
+          resCoordType : "WGS84GEO"
+        };
+
+        getTmap(obj,function(error, result){
+          num ++;
+          result.forEach(function(element){
+            resultArray.push(element);
+          });
+          if(num ==  splitArray.length) callback(null, resultArray);
+        });
+      });
+    }
+
+
+
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

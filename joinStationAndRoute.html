@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>수요조사 결과</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/FileSaver.min.js"></script>
+    <script type="text/javascript">
+      $.get("/file/(수도권)정류장목록2.txt",function(data){
+        var stations = data.split("^");
+        console.log("정류장 개수 : " + stations.length);
+
+        var stationsArray = [];
+        var stationsCodeArray = [];
+        stations.forEach(function(element) {
+          stationsCodeArray.push(element.split("|")[0]);
+          var arr = element.split("|");
+          arr.push([]);
+          stationsArray.push(arr);
+        });
+
+        $.get("/file/(서울)노선별_정류장.csv",function(data){
+          var lines = data.split("^");
+
+          $("progress").attr("max", lines.length);
+
+          lines.forEach(function(element, index){
+            if(index == 0) return;
+            var stationOrder = stationsCodeArray.indexOf(element.split("|")[1]);
+            if(stationOrder != -1) stationsArray[stationOrder][9] += element.split("|")[4]+"&";
+          });
+
+          var resultContent ="";
+          stationsArray.forEach(function(element){
+            resultContent += element+"\n";
+          });
+
+          var BOM = "\uFEFF";
+          var    csvData = BOM + resultContent;
+          var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+          saveAs(blob, "routeStation.csv");
+        });
+      }); 
+    </script>
+  </head>
+  <body>
+    <progress value="0" max="0"></progress>
+  </body>
+</html>
