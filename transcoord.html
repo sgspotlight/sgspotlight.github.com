@@ -22,20 +22,14 @@
             y: arr[4],
             fromCoord: "TM",
             toCoord: "WGS84",
-            output: "json",
-            dataType: "jsonp"
+            output: "json"
           }
 
           var api = "https://apis.daum.net/local/geo/transcoord?";
           var url = api + $.param(obj) + "&callback=?";
-          console.log(url);
-          $.ajax( url )
-          .done(function(data) {
-            console.log(data);
-          })
-          .fail(function(error) {
-            console.log(error);
-          })
+          $.getJSON(url, function(data) {
+            console.log(data);
+          });
         });
 /*
         var resultContent ="";
