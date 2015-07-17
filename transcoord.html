@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="map" style="width:500px;height:400px;"></div>
-    <progress value="0" max="0"></progress>
+    <progress value="0" max="0" style="width:1400px"></progress>
         <script type="text/javascript">
 
       var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
@@ -20,13 +20,12 @@
       };
       var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-      var resultContent = [];
+      var resultContent = "";
       $.get("/file/seoul_route_station.csv",function(data){
         var lines = data.split("\n");
         $("progress").attr("max", lines.length);
 
         lines.forEach(function(element, index){
-          if(index>40) return;
           var arr = element.split(",");
           var geocoder = new daum.maps.services.Geocoder(), // 좌표계 변환 객체를 생성합니다
               wtmX = arr[3], // 변환할 WTM X 좌표 입니다
@@ -54,12 +53,14 @@
 */
         });
       });
-
+      var count = 0;
       function transCoordCB(status, result) {
           if (status === daum.maps.services.Status.OK) {
-            resultContent.push(result.y+","+result.x);
+            resultContent += result.y+","+result.x+"\n";
+            count ++;
+            $("progress").attr("value", count);
           }
-          if(resultContent.length == 6){
+          if(count == lines.length){
             var BOM = "\uFEFF";
             var    csvData = BOM + resultContent;
             var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
