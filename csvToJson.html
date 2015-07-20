@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <title>수요조사 결과</title>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="/FileSaver.min.js"></script>
+    <script src="./FileSaver.min.js"></script>
     <script type="text/javascript">
-      $.get("/newSeedStation.csv",function(data){
+      $.get("./newSeedStation.csv",function(data){
         var stations = data.split("\n");
         console.log("정류장 개수 : " + stations.length);
 

@@ -17,11 +17,11 @@
     </style>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script src="/joohyuck.github.io/FileSaver.min.js"></script>
+    <script src="./FileSaver.min.js"></script>
     <script type="text/javascript">
 
     var stationArray = [];
-      $.get("/joohyuck.github.io/file/seoul.sudo_route_station.csv",function(data){
+      $.get("./file/seoul.sudo_route_station.csv",function(data){
         var lines = data.split("\n");
         console.log(lines.length+"개의 정류장");
         lines.forEach(function(element, index){
@@ -71,10 +71,10 @@
 
             var img;
             if(passRouteArray.length < 10){
-              img = "/joohyuck.github.io/image/busStation_icon_big.png";
+              img = "./image/busStation_icon_big.png";
             }
             else{
-              img = "/joohyuck.github.io/image/busStation_icon_red_big.png";
+              img = "./image/busStation_icon_red_big.png";
             }
 
             var marker = new google.maps.Marker({

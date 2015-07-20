@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <title>수요조사 결과</title>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="/joohyuck.github.io/FileSaver.min.js"></script>
+    <script src="./FileSaver.min.js"></script>
     <script type="text/javascript">
 
-      $.get("/joohyuck.github.io/file/seoul_route_station.txt",function(data){
+      $.get("./file/seoul_route_station.txt",function(data){
         var lines = data.split("\n");
         $("progress").attr("max", lines.length);
         console.log("노선 경유 정류장 개수 : " + lines.length);
