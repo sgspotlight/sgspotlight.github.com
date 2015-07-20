@@ -61,7 +61,7 @@
               if(el.split("")[0] == "*") passRedRoute ++;
             });
 
-            if(passRedRoute < 2 && element[6] != "인천") return;
+            if(passRedRoute == 0) return;
 
             var contentString = '<div>';
             contentString +='<h4>'+element[1]+'</h4>';
@@ -75,7 +75,7 @@
             });
 
             var img;
-            if(passRedRoute < 4 ){
+            if(passRedRoute < 2 ){
               img = "http://joohyuck.github.io/image/busStation_icon_big.png";
             }
             else{
