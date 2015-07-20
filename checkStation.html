@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>수요조사 결과</title>
+    <style>
+      html, body{
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      #map-canvas{
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="/joohyuck.github.io/FileSaver.min.js"></script>
+    <script type="text/javascript">
+
+    var stationArray = [];
+      $.get("/joohyuck.github.io/file/seoul.sudo_route_station.csv",function(data){
+        var lines = data.split("\n");
+        console.log(lines.length+"개의 정류장");
+        lines.forEach(function(element, index){
+          var arr = element.split(",");
+          stationArray.push(arr);
+        });
+      });
+
+      var map;
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(37.550965, 126.925331),
+          zoom: 13
+        };
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        //지도 이동할 때마다 이벤트 실행
+        google.maps.event.addListener(map, 'dragend', function() {
+          console.log("event fired!")
+          var northEast = map.getBounds().getNorthEast();
+          var southWest = map.getBounds().getSouthWest();
+
+          var selectedStationArray = [];
+          stationArray.forEach(function(element){
+            var a = element[5] - northEast.lat();
+            var b = element[5] - southWest.lat();
+            var c = element[4] - northEast.lng();
+            var d = element[4] - southWest.lng();
+            if( a*b < 0 && c*d < 0) selectedStationArray.push(element);
+          });
+          selectedStationArray.forEach(function(element){
+            var passRouteArray = element[9].split("&");
+            if(passRouteArray.length < 4 && element[6] != "인천") return;
+
+            var contentString = '<div>';
+            contentString +='<h4>'+element[1]+'</h4>';
+            passRouteArray.forEach(function(el){
+              contentString +='<p>'+el+'</p>';
+            })
+            contentString += '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            var img;
+            if(passRouteArray.length < 10){
+              img = "/joohyuck.github.io/image/busStation_icon_big.png";
+            }
+            else{
+              img = "/joohyuck.github.io/image/busStation_icon_red_big.png";
+            }
+
+            var marker = new google.maps.Marker({
+                position : new google.maps.LatLng(element[5], element[4]),
+                icon : img,
+                map : map
+            });
+
+            google.maps.event.addListener(marker, 'mouseover', function() {
+              infowindow.open(map,marker);
+            });
+            google.maps.event.addListener(marker, 'mouseout', function() {
+              infowindow.close();
+            });
+          });
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <section id="map-canvas"></section>
+  </body>
+</html>

@@ -5,43 +5,77 @@
     <meta charset="utf-8">
     <title>수요조사 결과</title>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="/FileSaver.min.js"></script>
+    <script src="./FileSaver.min.js"></script>
     <script type="text/javascript">
-      $.get("/file/(수도권)정류장목록2.txt",function(data){
+
+      var stationsArray = [];
+      var stationsCodeArray = [];
+      var stationsNameArray = [];
+      var resultContent = "";
+
+      //수도권 모든 정류장
+      $.get("./file/sudo_station.txt",function(data){
         var stations = data.split("^");
         console.log("정류장 개수 : " + stations.length);
-
-        var stationsArray = [];
-        var stationsCodeArray = [];
         stations.forEach(function(element) {
           stationsCodeArray.push(element.split("|")[0]);
+          stationsNameArray.push(element.split("|")[1]);
           var arr = element.split("|");
-          arr.push([]);
+          arr[9] = "";
           stationsArray.push(arr);
         });
 
-        $.get("/file/(서울)노선별_정류장.csv",function(data){
-          var lines = data.split("^");
-
-          $("progress").attr("max", lines.length);
-
-          lines.forEach(function(element, index){
-            if(index == 0) return;
+        //경기.인천 경유노선
+        $.get("./file/sudo_route_station.txt",function(data){
+          var sudoLines = data.split("^");
+          sudoLines.forEach(function(element, index){
             var stationOrder = stationsCodeArray.indexOf(element.split("|")[1]);
             if(stationOrder != -1) stationsArray[stationOrder][9] += element.split("|")[4]+"&";
           });
+          console.log("sudo_done!");
+          //서울 경유노선
+          $.get("./file/seoul_route_station.txt",function(data){
+            var seoulLines = data.split("\n");
+            seoulLines.forEach(function(element, index){
+              var station = element.split(",");
+              var sameNameStationArray = [];
+              var stationOrder = 0;
+              while(true){
+                stationOrder = stationsNameArray.indexOf(station[2], stationOrder+1);
+                if( stationOrder == -1 ) break;
+                sameNameStationArray.push(stationOrder);
+              }
+              //새절역.숭실고입구 -> 새절역숭실고입구로 치환해서 다시 검사
+              if(station[2].indexOf(".") != -1){
+                stationOrder = 0;
+                var string = station[2].replace(/\./g,"");
+                while(true){
+                  stationOrder = stationsNameArray.indexOf(string, stationOrder+1);
+                  if( stationOrder == -1 ) break;
+                  sameNameStationArray.push(stationOrder);
+                }
+              }
+              sameNameStationArray.forEach(function(el){
+                var distance = Math.abs(stationsArray[el][5]-station[5]) + Math.abs(stationsArray[el][4]-station[6]);
+                if(stationsArray[el][6] == "서울" && distance < 0.0005){
+                  if(stationsArray[el][9].split("&").indexOf(element.split(",")[0]) == -1)
+                  stationsArray[el][9] += element.split(",")[0]+"&";
+                }
+              });
+            });
+            console.log("seoul_done!");
 
-          var resultContent ="";
-          stationsArray.forEach(function(element){
-            resultContent += element+"\n";
+            stationsArray.forEach(function(element){
+              resultContent += element+"\n";
+            });
+            var BOM = "\uFEFF";
+            var    csvData = BOM + resultContent;
+            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+            saveAs(blob, "routeStation.csv");
           });
-
-          var BOM = "\uFEFF";
-          var    csvData = BOM + resultContent;
-          var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-          saveAs(blob, "routeStation.csv");
         });
-      }); 
+      });
+
     </script>
   </head>
   <body>
