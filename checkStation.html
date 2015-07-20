@@ -17,11 +17,11 @@
     </style>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script src="./FileSaver.min.js"></script>
+    <script src="http://joohyuck.github.io/FileSaver.min.js"></script>
     <script type="text/javascript">
 
     var stationArray = [];
-      $.get("./file/seoul.sudo_route_station.csv",function(data){
+      $.get("http://joohyuck.github.io/file/seoul.sudo_route_station(red).csv",function(data){
         var lines = data.split("\n");
         console.log(lines.length+"개의 정류장");
         lines.forEach(function(element, index){
@@ -56,7 +56,12 @@
           });
           selectedStationArray.forEach(function(element){
             var passRouteArray = element[9].split("&");
-            if(passRouteArray.length < 4 && element[6] != "인천") return;
+            var passRedRoute = 0;
+            passRouteArray.forEach(function(el){
+              if(el.split("")[0] == "*") passRedRoute ++;
+            });
+
+            if(passRedRoute < 2 && element[6] != "인천") return;
 
             var contentString = '<div>';
             contentString +='<h4>'+element[1]+'</h4>';
@@ -70,11 +75,11 @@
             });
 
             var img;
-            if(passRouteArray.length < 10){
-              img = "./image/busStation_icon_big.png";
+            if(passRedRoute < 4 ){
+              img = "http://joohyuck.github.io/image/busStation_icon_big.png";
             }
             else{
-              img = "./image/busStation_icon_red_big.png";
+              img = "http://joohyuck.github.io/image/busStation_icon_red_big.png";
             }
 
             var marker = new google.maps.Marker({
