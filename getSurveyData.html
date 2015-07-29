@@ -8,13 +8,11 @@
     <script src="./FileSaver.min.js"></script>
     <script type="text/javascript">
 
-      $.get("./file/survey_result.json",function(data){
-        console.log(typeof(data));
-        console.log(data);
-
+      $.get("./file/Survey.json",function(data){
+/*
         var resultContent = "학교, 이메일, 버스정류장, 지하철 \n";
         data.results.forEach(function(element){
-          if(element.WorkDetail.indexOf("서강대학교") == -1) return;
+          if(element.WorkDetail.indexOf("대학교") == -1) return;
           if(!element.homeLocation) return;
           var array = [];
           array[0] = element.WorkDetail;
@@ -42,11 +40,26 @@
           if( home[home.length-1].slice(-1) == "역" )  array[7] = "지하철";
           resultContent += array + "\n";
         });
+*/
+
+  var subway = [];
+data.results.forEach(function(element){
+  if(!element.nearSubwayStation) return;
+  element.nearSubwayStation.forEach(function(el){
+    subway.push(element.email +":"+ el.name);
+  });
+});
+
+var resultContent = "";
+subway.forEach(function(element){
+resultContent += element.split(":") + "\n";
+});
+
 
         var BOM = "\uFEFF";
         var    csvData = BOM + resultContent;
         var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-        saveAs(blob, "sogang_result.csv");
+        saveAs(blob, "survey_statoin_result.csv");
       });
 
     </script>

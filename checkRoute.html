@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./vendor/semantic-ui/semantic.min.css">
+    <title>수요조사 결과</title>
+    <style>
+      html, body{
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+  </head>
+  <body>
+    <section id="routes"></section>
+    <script src="http://joohyuck.github.io/parse-1.4.2.min.js"></script> 
+    <script type="text/javascript">
+      Parse.initialize("eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B", "pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib");
+
+      var query = new Parse.Query("Route");
+
+      query.find({
+        success: function(placesObjects) {
+          var str = "";
+          placesObjects.forEach(function(element){
+            str +='<table class="ui celled table">';
+            str +='  <thead>';
+            str +='    <tr>';
+            str +='      <th>순번</th>';
+            str +='      <th>출발/도착</th>';
+            str +='      <th>정류장 이름</th>';
+            str +='      <th>출발 시간</th>';
+            str +='    </tr>';
+            str +='  </thead>';
+            str +='  <tbody>';
+            console.log(element);
+            element.attributes.stations.forEach(function(el){
+              str +='    <tr>';
+              str +='      <td>'+el.order+'</td>';
+              if(el.type == "S") str +='      <td>출발지</td>';
+              else str +='      <td>도착지</td>';
+              str +='      <td>'+el.stationName+'</td>';
+              str +='      <td>'+el.time+'</td>';
+              str +='    </tr>';
+            });
+            str +='  </tbody>';
+            str +='</table>';
+          });
+          $("#routes").html(str);
+        }
+      });
+    </script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="./vendor/semantic-ui/semantic.min.js"></script>
+  </body>
+</html>

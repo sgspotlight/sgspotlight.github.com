@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>수요조사 결과</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://joohyuck.github.io/parse-1.4.2.min.js"></script>
+    <script type="text/javascript">
+
+      Parse.initialize("eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B", "pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib");
+
+      var query = new Parse.Query("Station");
+      var Query = new Parse.Query("Station");
+
+      //광역버스 정류장
+      $.get("./file/Station.json",function(data){
+        var busStations = data.results;
+        var selectedStation = [];
+
+        busStations.forEach(function(element){
+          var redLineNum = 0;
+          element.passRoute.forEach(function(el){
+            if(el.type == "redLine") redLineNum ++;
+          });
+          if(redLineNum >= 2) selectedStation.push(element); 
+        });
+
+        console.log(selectedStation.length+'개의 정류장이 선택됨');
+        var arrNum = -1;
+        saveSurveyPoint();
+
+        function saveSurveyPoint(){
+          arrNum ++;
+          console.log(arrNum);
+          if (selectedStation.length <= arrNum) return;
+          var element = selectedStation[arrNum];
+          var point = new Parse.GeoPoint({
+            latitude: element.location.latitude, 
+            longitude: element.location.longitude
+          });
+          //반경 300m내에 버스 정류장이 있는가?
+          query.withinKilometers('location', point, 0.3)
+          query.equalTo('surveyPoint', true);
+          //그리고 true인가?
+          query.count({
+            success: function(count) {
+              if(count == 0){
+                Query.get(element.objectId, {
+                  success: function(object) {
+                    object.set("surveyPoint", true);
+                    object.save(null, {
+                      success: function(gameScore) {
+                        // Execute any logic that should take place after the object is saved.
+                        console.log("success!");
+                        saveSurveyPoint();
+                      },
+                      error: function(gameScore, error) {
+                        // Execute any logic that should take place if the save fails.
+                        // error is a Parse.Error with an error code and message.
+                        console.log('저장실패');
+                        saveSurveyPoint();
+                      }
+                    });
+                  },
+                  error: function(object, error) {
+                    console.log(element.objectId+'를 불러오지 못했습니다.'+error);
+                    saveSurveyPoint();
+                  }
+                });
+              }
+              else {
+                console.log("이미 근처에 정류장이 존재합니다.");
+                saveSurveyPoint();
+              }
+            },
+            error: function(error) {
+              console.log(error);
+              saveSurveyPoint();
+            }
+          });
+        }
+      });
+    </script>
+    </head>
+</html>
