@@ -4,17 +4,15 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <link rel="stylesheet" href="./vendor/semantic-ui/semantic.min.css">
-    <title>수요조사 결과</title>
+    <title>응삼을 위한 노선확인 페이지</title>
     <style>
-      html, body{
-        height: 100%;
-        margin: 0px;
-        padding: 0px
+      section {
+        margin-top: 50px;
       }
     </style>
   </head>
   <body>
-    <section id="routes"></section>
+    <section id="routes" class="ui container"></section>
     <script src="http://joohyuck.github.io/parse-1.4.2.min.js"></script> 
     <script type="text/javascript">
       Parse.initialize("eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B", "pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib");
@@ -25,6 +23,10 @@
         success: function(placesObjects) {
           var str = "";
           placesObjects.forEach(function(element){
+            str +='<h4 class="ui horizontal divider header">';
+            str +='  <i class="tag icon"></i>';
+            str +=  element.attributes.title+': <span>'+element.attributes.departure+'노선</span>';
+            str +='</h4>';
             str +='<table class="ui celled table">';
             str +='  <thead>';
             str +='    <tr>';
@@ -35,7 +37,6 @@
             str +='    </tr>';
             str +='  </thead>';
             str +='  <tbody>';
-            console.log(element);
             element.attributes.stations.forEach(function(el){
               str +='    <tr>';
               str +='      <td>'+el.order+'</td>';
