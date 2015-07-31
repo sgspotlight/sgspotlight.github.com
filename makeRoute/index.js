@@ -143,6 +143,7 @@ function getRoute(){
       array : arr
     })
   .done(function( data ) {
+    console.log(data);
     displayRoute(data);
   });
 }
@@ -150,7 +151,8 @@ function getRoute(){
 function displayRoute(inputArray){
   var flightPlanCoordinates = [];
   pathArray = [];
-  inputArray.forEach(function(el){
+  inputArray.forEach(function(el, index){
+    if(index > inputArray.length -3) return;
     flightPlanCoordinates.push({lat:el[1],lng:el[0]});
     pathArray.push([parseFloat(el[1]), parseFloat(el[0])]);
   });
