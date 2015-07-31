@@ -23,6 +23,11 @@
 section {
   margin-top: 50px;
 }
+
+#route-image-mobile {
+  display: none;
+}
+
 #route-image .base-line {
   position: relative;
   width : 100%;
@@ -102,6 +107,89 @@ section {
   color: #00bbb3;
 }
 
+
+
+#route-image-mobile {
+  width : 100%;
+}
+#route-image-mobile .base-line {
+  width : 100%;
+  margin-left: 25px !important;
+  padding: 0px;
+  border-left-width: 7px;
+  border-left-style: solid;
+  border-left-color: #cccccc;
+}
+#route-image-mobile .base-line .hide-border{
+  position: absolute;
+  right: 0px;
+  width: 30%;
+  top: -8px; 
+  border-top-color: white;
+  border-top-width: 10px;
+  border-top-style: solid;
+}
+#route-image-mobile .route {
+  margin: 0% 0% 0% 10%;
+}    
+#route-image-mobile .route li {
+  border-bottom-style: solid;
+  border-bottom-color: lightgrey;
+  border-bottom-width: 1px;
+
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  margin-left: 20px;
+  list-style: none;
+  overflow: visible;
+}
+#route-image-mobile .route li .time{
+  background-color: white;
+  z-index : 2;
+  position: relative;
+  left : 80%;
+  font-size: 1.2em;
+  color : #bcbcbc;
+}
+#route-image-mobile .route li .circle{
+  display: inline-block;
+  width : 20px;
+  height: 20px;
+
+  position: relative;
+  right: 72px;
+  top : 2px;
+
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 7px;
+  border-radius: 50%;
+  background-color: white;
+}
+#route-image-mobile .route li .circle.end{
+  border-color: #00bbb3;
+}
+#route-image-mobile .route li .name{
+  font-family: 'Hansans-thin';
+
+  position: relative;
+  right: 40px;
+
+  width : 75%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.31em;
+  color : #555555;
+}
+#route-image-mobile .route li .name.end{
+  font-family: 'Hansans-bold';
+  color: #00bbb3;
+}
+
+
+
 @media (max-width: 1100px) {
     #route-image .base-line {
       border-top-width: 4px;
@@ -121,18 +209,43 @@ section {
       font-size: 1em;
     }
 }
-@media (max-width: 768px) {
 
-
+@media (max-width: 650px) {
+  #route-image {
+    display: none;
+  }
+  #route-image-mobile {
+    display: inline-block;
+  }
 }
+
+@media (max-width: 400px) {
+  #route-image-mobile .base-line {
+    border-left-width: 4px;
+  }
+  #route-image-mobile .route li .time{
+    left : 75%;
+    font-size: 0.9em;
+  }
+  #route-image-mobile .route li .circle{
+    right: 62px;
+    width : 15px;
+    height : 15px;
+    border-width: 4px;
+  }
+  #route-image-mobile .route li .name{
+    font-size: 1em;
+  }
+}
+
+
 
     </style>
   </head>
   <body>
 
-<section id="route-image">
-</section>
-
+    <section id="route-image"></section>
+    <section id="route-image-mobile"></section>
     <section id="routes" class="ui container"></section>
     <script src="http://joohyuck.github.io/parse-1.4.2.min.js"></script> 
     <script type="text/javascript">
@@ -163,32 +276,54 @@ section {
           });
           $("#route-image").html(lng);
 
-
-          placesObjects.forEach(function(element, index){
-            var num = element.attributes.stations.length;
-            var interval = $("#route-image").width()*0.7/num;
-
-            console.log(interval);
-            element.attributes.stations.forEach(function(el ,i){
-              if(el.type == "S")
-              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
-              else
-              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+          var lngMobile = "";
+          placesObjects.forEach(function(element){
+            lngMobile += '<ul class="route base-line">';
+            lngMobile += '<div class="hide-border"></div>';
+            element.attributes.stations.forEach(function(el,i){
+              lngMobile += '<li>';
+              lngMobile += '<span class="time">'+el.time+'</span>';
+              if(el.type == "S") {
+                lngMobile += '<span class="circle start"></span>';
+                lngMobile += '<span class="name start">'+(i+1)+'.'+el.stationName+'</span>';
+              }
+              else {
+                lngMobile += '<span class="circle end"></span>';
+                lngMobile += '<span class="name end">'+(i+1)+'.'+el.stationName+'</span>';
+              }
+              lngMobile += '</li>'; 
             });
+            lngMobile +='  </ul>';
           });
+          $("#route-image-mobile").html(lngMobile);
+
+        placesObjects.forEach(function(element, index){
+          var num = element.attributes.stations.length;
+          var interval = $("#route-image").width()*0.7/num;
+
+          console.log(interval);
+          element.attributes.stations.forEach(function(el ,i){
+            if(el.type == "S")
+            $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
+            else
+            $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+          });
+        });
         $( window ).resize(function() {
-          placesObjects.forEach(function(element, index){
-            var num = element.attributes.stations.length;
-            var interval = $("#route-image").width()*0.7/num;
-            $("#route-image .base-line .hide-border").css("width", $("#route-image").width()*0.3);
-            console.log(interval);
-            element.attributes.stations.forEach(function(el ,i){
-              if(el.type == "S")
-              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
-              else
-              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+          if($("#route-image").width() > 650){
+            placesObjects.forEach(function(element, index){
+              var num = element.attributes.stations.length;
+              var interval = $("#route-image").width()*0.7/num;
+              $("#route-image .base-line .hide-border").css("width", $("#route-image").width()*0.3);
+              console.log(interval);
+              element.attributes.stations.forEach(function(el ,i){
+                if(el.type == "S")
+                $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
+                else
+                $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+              });
             });
-          });
+          }
         });
 
           var str = "";
