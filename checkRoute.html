@@ -129,14 +129,6 @@ section {
 
 
 /* mobile line */
-@media (max-width: 650px) {
-  #route-image {
-    display: none;
-  }
-  #route-image-mobile {
-    display: inline-block;
-  }
-}
 
 #route-image-mobile {
   display: none;
@@ -221,6 +213,15 @@ section {
   border-color: #00bbb3;
 }
 
+@media (max-width: 650px) {
+  #route-image {
+    display: none;
+  }
+  #route-image-mobile {
+    display: inline-block;
+  }
+}
+
 @media (max-width: 400px) {
   #route-image-mobile .base-line {
     border-left-width: 4px;
@@ -265,11 +266,11 @@ section {
               lng += '<span class="time">'+el.time+'</span>';
               if(el.type == "S") {
                 lng += '<span class="circle start"></span>';
-                lng += '<span class="name start">'+i+'.'+el.stationName+'</span>';
+                lng += '<span class="name start">'+(i+1)+'.'+el.stationName+'</span>';
               }
               else {
                 lng += '<span class="circle end"></span>';
-                lng += '<span class="name end">'+i+'.'+el.stationName+'</span>';
+                lng += '<span class="name end">'+(i+1)+'.'+el.stationName+'</span>';
               }
               lng += '</li>'; 
             });
@@ -324,8 +325,6 @@ section {
         }
       });
     </script>
-    <script src="//use.typekit.net/zgw4neu.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script src="./vendor/semantic-ui/semantic.min.js"></script>
