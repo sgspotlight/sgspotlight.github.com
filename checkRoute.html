@@ -24,9 +24,8 @@ section {
   margin-top: 50px;
 }
 
-#route-image-mobile {
-  display: none;
-}
+
+/* desktop line */
 
 #route-image .base-line {
   position: relative;
@@ -107,9 +106,40 @@ section {
   color: #00bbb3;
 }
 
+@media (max-width: 1100px) {
+    #route-image .base-line {
+      border-top-width: 4px;
+    }
+    #route-image .route li .time{
+      font-size: 0.9em;
+    }
+    #route-image .route li .circle{
+      top : -15px;
+      width : 15px;
+      height : 15px;
+      border-width: 4px;
+    }
+    #route-image .route li .name{
+      width : 150px;
+      height : 1.5em;
+      font-size: 1em;
+    }
+}
+/* /desktop line */
 
+
+/* mobile line */
+@media (max-width: 650px) {
+  #route-image {
+    display: none;
+  }
+  #route-image-mobile {
+    display: inline-block;
+  }
+}
 
 #route-image-mobile {
+  display: none;
   width : 100%;
 }
 #route-image-mobile .base-line {
@@ -158,7 +188,7 @@ section {
   height: 20px;
 
   position: relative;
-  right: 72px;
+  right: 76px;
   top : 2px;
 
   border-style: solid;
@@ -167,16 +197,16 @@ section {
   border-radius: 50%;
   background-color: white;
 }
-#route-image-mobile .route li .circle.end{
-  border-color: #00bbb3;
-}
 #route-image-mobile .route li .name{
   font-family: 'Hansans-thin';
 
+  display: inline-block;
   position: relative;
   right: 40px;
+  top : 3px;
+  padding-top: 1px;
 
-  width : 75%;
+  width : 70%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -187,36 +217,8 @@ section {
   font-family: 'Hansans-bold';
   color: #00bbb3;
 }
-
-
-
-@media (max-width: 1100px) {
-    #route-image .base-line {
-      border-top-width: 4px;
-    }
-    #route-image .route li .time{
-      font-size: 0.9em;
-    }
-    #route-image .route li .circle{
-      top : -15px;
-      width : 15px;
-      height : 15px;
-      border-width: 4px;
-    }
-    #route-image .route li .name{
-      width : 150px;
-      height : 1.5em;
-      font-size: 1em;
-    }
-}
-
-@media (max-width: 650px) {
-  #route-image {
-    display: none;
-  }
-  #route-image-mobile {
-    display: inline-block;
-  }
+#route-image-mobile .route li .circle.end{
+  border-color: #00bbb3;
 }
 
 @media (max-width: 400px) {
@@ -237,10 +239,9 @@ section {
     font-size: 1em;
   }
 }
+/* /mobile line */
 
-
-
-    </style>
+</style>
   </head>
   <body>
 
@@ -297,25 +298,21 @@ section {
           });
           $("#route-image-mobile").html(lngMobile);
 
-        placesObjects.forEach(function(element, index){
-          var num = element.attributes.stations.length;
-          var interval = $("#route-image").width()*0.7/num;
-
-          console.log(interval);
-          element.attributes.stations.forEach(function(el ,i){
-            if(el.type == "S")
-            $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
-            else
-            $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+          placesObjects.forEach(function(element, index){
+            var num = element.attributes.stations.length;
+            var interval = $("#route-image").width()*0.7/num;
+            element.attributes.stations.forEach(function(el ,i){
+              if(el.type == "S")
+              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
+              else
+              $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
+            });
           });
-        });
-        $( window ).resize(function() {
-          if($("#route-image").width() > 650){
+          $( window ).resize(function() {
             placesObjects.forEach(function(element, index){
               var num = element.attributes.stations.length;
               var interval = $("#route-image").width()*0.7/num;
               $("#route-image .base-line .hide-border").css("width", $("#route-image").width()*0.3);
-              console.log(interval);
               element.attributes.stations.forEach(function(el ,i){
                 if(el.type == "S")
                 $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*i);
@@ -323,38 +320,7 @@ section {
                 $("#route-image .route:nth-child("+(index+1)+") li:nth-child("+(i+2)+")").css("left" , -45+interval*(i+1));  
               });
             });
-          }
-        });
-
-          var str = "";
-          placesObjects.forEach(function(element){
-            str +='<h4 class="ui horizontal divider header">';
-            str +='  <i class="tag icon"></i>';
-            str +=  element.attributes.title+': <span>'+element.attributes.departure+'노선</span>';
-            str +='</h4>';
-            str +='<table class="ui celled table">';
-            str +='  <thead>';
-            str +='    <tr>';
-            str +='      <th>순번</th>';
-            str +='      <th>출발/도착</th>';
-            str +='      <th>정류장 이름</th>';
-            str +='      <th>출발 시간</th>';
-            str +='    </tr>';
-            str +='  </thead>';
-            str +='  <tbody>';
-            element.attributes.stations.forEach(function(el){
-              str +='    <tr>';
-              str +='      <td>'+el.order+'</td>';
-              if(el.type == "S") str +='      <td>출발지</td>';
-              else str +='      <td>도착지</td>';
-              str +='      <td>'+el.stationName+'</td>';
-              str +='      <td>'+el.time+'</td>';
-              str +='    </tr>';
-            });
-            str +='  </tbody>';
-            str +='</table>';
           });
-          $("#routes").html(str);
         }
       });
     </script>
