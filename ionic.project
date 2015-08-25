@@ -1,4 +1,8 @@
 {
   "name": "picme",
-  "app_id": ""
+  "app_id": "",
+  "watchPatterns": [
+    "www/**/*",
+    "www/lib/**/*"
+  ]
 }

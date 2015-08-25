@@ -1,1 +1,16 @@
 /* Empty. Add your own CSS if you like */
+
+
+.slider {
+	height: 100vh;
+}
+
+.box.blue {
+	background-color: blue;
+}
+.box.yellow {
+	background-color: yellow;
+}
+.box.pink {
+	background-color: pink;
+}
