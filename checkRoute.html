@@ -27,7 +27,7 @@ section {
 
 /* desktop line */
 
-#route-image .base-line {
+#route .route-image .base-line {
   position: relative;
   width : 100%;
   margin-left: 10%;
@@ -36,7 +36,7 @@ section {
   border-top-style: solid;
   border-top-color: #cccccc;
 }
-#route-image .base-line .hide-border{
+#route .route-image .base-line .hide-border{
   position: absolute;
   right: 0px;
   width: 30%;
@@ -45,17 +45,17 @@ section {
   border-top-width: 10px;
   border-top-style: solid;
 }
-#route-image .route {
+#route .route-image .route {
   margin-top: 200px;
   overflow: visible;
 }    
-#route-image .route li {
+#route .route-image .route li {
   list-style: none;
   position: absolute;
   height: 20px;
   overflow: visible;
 }
-#route-image .route li .time{
+#route .route-image .route li .time{
   position: relative;
   left : 28px;
   top : 13px;
@@ -65,7 +65,7 @@ section {
   */
   color : #bcbcbc;
 }
-#route-image .route li .circle{
+#route .route-image .route li .circle{
   position: relative;
   bottom : 13px;
   /*
@@ -80,10 +80,10 @@ section {
   border-radius: 50%;
   background-color: white;
 }
-#route-image .route li .circle.end{
+#route .route-image .route li .circle.end{
   border-color: #00bbb3;
 }
-#route-image .route li .name{
+#route .route-image .route li .name{
   font-family: 'Hansans-thin';
   display: inline-block;
   position: relative;
@@ -101,25 +101,25 @@ section {
   -webkit-transform: rotate(-40deg);
   transform: rotate(-40deg);
 }
-#route-image .route li .name.end{
+#route .route-image .route li .name.end{
   font-family: 'Hansans-bold';
   color: #00bbb3;
 }
 
 @media (max-width: 1100px) {
-    #route-image .base-line {
+    #route .route-image .base-line {
       border-top-width: 4px;
     }
-    #route-image .route li .time{
+    #route .route-image .route li .time{
       font-size: 0.9em;
     }
-    #route-image .route li .circle{
+    #route .route-image .route li .circle{
       top : -15px;
       width : 15px;
       height : 15px;
       border-width: 4px;
     }
-    #route-image .route li .name{
+    #route .route-image .route li .name{
       width : 150px;
       height : 1.5em;
       font-size: 1em;
@@ -130,11 +130,11 @@ section {
 
 /* mobile line */
 
-#route-image-mobile {
+#route .route-image-mobile {
   display: none;
   width : 100%;
 }
-#route-image-mobile .base-line {
+#route .route-image-mobile .base-line {
   width : 100%;
   margin-left: 25px !important;
   padding: 0px;
@@ -142,7 +142,7 @@ section {
   border-left-style: solid;
   border-left-color: #cccccc;
 }
-#route-image-mobile .base-line .hide-border{
+#route .route-image-mobile .base-line .hide-border{
   position: absolute;
   right: 0px;
   width: 30%;
@@ -151,10 +151,10 @@ section {
   border-top-width: 10px;
   border-top-style: solid;
 }
-#route-image-mobile .route {
+#route .route-image-mobile .route {
   margin: 0% 0% 0% 10%;
 }    
-#route-image-mobile .route li {
+#route .route-image-mobile .route li {
   border-bottom-style: solid;
   border-bottom-color: lightgrey;
   border-bottom-width: 1px;
@@ -166,7 +166,7 @@ section {
   list-style: none;
   overflow: visible;
 }
-#route-image-mobile .route li .time{
+#route .route-image-mobile .route li .time{
   background-color: white;
   z-index : 2;
   position: relative;
@@ -174,7 +174,7 @@ section {
   font-size: 1.2em;
   color : #bcbcbc;
 }
-#route-image-mobile .route li .circle{
+#route .route-image-mobile .route li .circle{
   display: inline-block;
   width : 20px;
   height: 20px;
@@ -189,7 +189,7 @@ section {
   border-radius: 50%;
   background-color: white;
 }
-#route-image-mobile .route li .name{
+#route .route-image-mobile .route li .name{
   font-family: 'Hansans-thin';
 
   display: inline-block;
@@ -205,38 +205,38 @@ section {
   font-size: 1.31em;
   color : #555555;
 }
-#route-image-mobile .route li .name.end{
+#route .route-image-mobile .route li .name.end{
   font-family: 'Hansans-bold';
   color: #00bbb3;
 }
-#route-image-mobile .route li .circle.end{
+#route .route-image-mobile .route li .circle.end{
   border-color: #00bbb3;
 }
 
 @media (max-width: 650px) {
-  #route-image {
+  #route .route-image {
     display: none;
   }
-  #route-image-mobile {
+  #route .route-image-mobile {
     display: inline-block;
   }
 }
 
 @media (max-width: 400px) {
-  #route-image-mobile .base-line {
+  #route .route-image-mobile .base-line {
     border-left-width: 4px;
   }
-  #route-image-mobile .route li .time{
+  #route .route-image-mobile .route li .time{
     left : 75%;
     font-size: 0.9em;
   }
-  #route-image-mobile .route li .circle{
+  #route .route-image-mobile .route li .circle{
     right: 62px;
     width : 15px;
     height : 15px;
     border-width: 4px;
   }
-  #route-image-mobile .route li .name{
+  #route .route-image-mobile .route li .name{
     font-size: 1em;
   }
 }
@@ -276,7 +276,7 @@ section {
             });
             lng +='  </ul>';
           });
-          $("#route-image").html(lng);
+          $("#route #route-image").html(lng);
 
           var lngMobile = "";
           placesObjects.forEach(function(element){
