@@ -24,9 +24,6 @@
         <h1 class="title">Ionic Blank Starter</h1>
       </ion-header-bar>
       <ion-content>
-        <button class="button button-full button-positive">
-          Full Width Block Button
-        </button>
         <ion-slide-box on-slide-changed="slideHasChanged($index)">
           <ion-slide>
             <div class="box blue"><h1>BLUE</h1></div>
@@ -38,7 +35,42 @@
             <div class="box pink"><h1>PINK</h1></div>
           </ion-slide>
         </ion-slide-box>
+        <div id="disqus_thread"></div>
       </ion-content>
     </ion-pane>
+    <a id="kakao-link-btn" href="javascript:;">카카오톡 공유하기</a>
+
+    <script>
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('349aaeef85d197684a1aad70c72fd4ef');
+
+    // 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.Link.createTalkLinkButton({
+      container: '#kakao-link-btn',
+      label: '카카오링크 샘플에 오신 것을 환영합니다.',
+      image: {
+        src: 'http://dn.api1.kage.kakao.co.kr/14/dn/btqaWmFftyx/tBbQPH764Maw2R6IBhXd6K/o.jpg',
+        width: '300',
+        height: '200'
+      },
+      webButton: {
+        text: '카카오 디벨로퍼스',
+        url: 'https://dev.kakao.com/docs/js' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+      }
+    });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'picmekr';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
   </body>
 </html>
