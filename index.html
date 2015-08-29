@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>버스 하베스트</title>
+    <link rel="stylesheet" href="./vendor/semantic-ui/semantic.min.css">
+    <style>
+      #map-canvas {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+  <br>
+  <div class="ui grid">
+    <div id="map-canvas" class="ten wide column"></div>
+    <div id="console" class="five wide column">
+      <div class="ui form">
+        <input id="status" type="hidden">
+        <input id="latitude" type="hidden">
+        <input id="longitude" type="hidden">
+        <div class="field">
+          <label>위키포인트 이름</label>
+          <input id="point-name" type="text" placeholder="">
+        </div>
+        <div class="field">
+          <label>설명</label>
+          <textarea id="point-description" placeholder="선정 이유, 주요 서울권역 까지의 접근성등"></textarea>
+        </div>
+        <button onclick="saveInfo()" class="ui button primary">저장하기</button>
+        <button id="delete" onclick="deleteInfo()" class="ui button red">삭제하기</button>
+      </div>
+    </div>
+  </div>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="./vendor/semantic-ui/semantic.min.js"></script>
+    <script src="./parse-1.4.2.min.js"></script>
+    <script src="./index.js"></script>
+    <script type="text/javascript">
+      $('.ui.dropdown').dropdown();
+    </script>
+  </body>
+</html>
