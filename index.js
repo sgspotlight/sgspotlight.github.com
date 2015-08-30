@@ -70,6 +70,8 @@ else {
   google.maps.event.addListener(map, 'click', function(event) {
     currentMarker.setPosition(event.latLng);
     $("#status").val("new");
+    $("#point-name").val("");
+    $("#point-description").val("");
     $("#latitude").val(event.latLng.lat());
     $("#longitude").val(event.latLng.lng());
     $("#delete").attr("disabled", "disabled");
