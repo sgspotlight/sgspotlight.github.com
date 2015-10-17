@@ -3,43 +3,48 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>버스 하베스트</title>
-    <link rel="stylesheet" href="./vendor/semantic-ui/semantic.min.css">
+    <title>테스트</title>
     <style>
-      #map-canvas {
-        height: 100vh;
-      }
     </style>
   </head>
   <body>
-  <br>
-  <div class="ui grid">
-    <div id="map-canvas" class="ten wide column"></div>
-    <div id="console" class="five wide column">
-      <div class="ui form">
-        <input id="status" type="hidden">
-        <input id="latitude" type="hidden">
-        <input id="longitude" type="hidden">
-        <div class="field">
-          <label>위키포인트 이름</label>
-          <input id="point-name" type="text" placeholder="">
-        </div>
-        <div class="field">
-          <label>설명</label>
-          <textarea id="point-description" placeholder="선정 이유, 주요 서울권역 까지의 접근성등"></textarea>
-        </div>
-        <button onclick="saveInfo()" class="ui button primary">저장하기</button>
-        <button id="delete" onclick="deleteInfo()" class="ui button red">삭제하기</button>
-      </div>
-    </div>
-  </div>
+  <p id="result"></p>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script src="./vendor/semantic-ui/semantic.min.js"></script>
-    <script src="./parse-1.4.2.min.js"></script>
-    <script src="./index.js"></script>
     <script type="text/javascript">
-      $('.ui.dropdown').dropdown();
+
+      var lat = 0;
+      var lng = 0;
+
+      function geo_success(position) {
+        $("#result").html(position.coords.latitude + "," + position.coords.longitude);
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+      }
+
+      function geo_error() {
+        $("#result").html("위치 정보를 사용할 수 없습니다.");
+        console.log("위치 정보를 사용할 수 없습니다.");
+      }
+
+      var geo_options = {
+        enableHighAccuracy: true, 
+        maximumAge        : 30000, 
+        timeout           : 27000
+      };
+
+      var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+
+      setInterval(function(){
+        $.post( "https://pushalot.com/api/sendmessage", 
+          { 
+            "AuthorizationToken": "5b2e4ba7c1734cd7b412acf23d7a7f07", 
+            "Body": lat+","+lng 
+          }
+        ) 
+        .done(function( data ) {
+          console.log( data );
+        });
+      }, 10000);
     </script>
   </body>
 </html>
