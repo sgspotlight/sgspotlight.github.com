@@ -9,6 +9,9 @@
   </head>
   <body>
   <p id="result"></p>
+  <div id="log">
+    
+  </div>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
 
@@ -36,6 +39,7 @@
       var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
 
       setInterval(function(){
+        $("#log").append("<p>" + count + "번 째 알림 </p>");
         $.post( "https://pushalot.com/api/sendmessage", 
           { 
             "AuthorizationToken": "5b2e4ba7c1734cd7b412acf23d7a7f07", 
