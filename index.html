@@ -14,6 +14,7 @@
 
       var lat = 0;
       var lng = 0;
+      var count = 0;
 
       function geo_success(position) {
         $("#result").html(position.coords.latitude + "," + position.coords.longitude);
@@ -38,10 +39,11 @@
         $.post( "https://pushalot.com/api/sendmessage", 
           { 
             "AuthorizationToken": "5b2e4ba7c1734cd7b412acf23d7a7f07", 
-            "Body": lat+","+lng 
+            "Body": count + "번 :" + lat+","+lng 
           }
         ) 
         .done(function( data ) {
+          count ++;
           console.log( data );
         });
       }, 10000);
