@@ -8,16 +8,24 @@
     </style>
   </head>
   <body>
+  <input id="routeId" placeholder="노선 ID입력">
+  <button onClick="saveRouteId()"></button>
   <p id="result"></p>
   <div id="log">
     
   </div>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//www.parsecdn.com/js/parse-1.6.7.min.js"></script>
     <script type="text/javascript">
 
       var lat = 0;
       var lng = 0;
       var count = 0;
+      Parse.initialize('eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B', 'pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib');
+      var RunningLog = Parse.Object.extend("RunningLog");
+
+      setInterval( postLocation, 4000);
+      var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
 
       function geo_success(position) {
         $("#result").html(position.coords.latitude + "," + position.coords.longitude);
@@ -36,21 +44,36 @@
         timeout           : 27000
       };
 
-      var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+      function postLocation() {
 
-      setInterval(function(){
-        $("#log").append("<p>" + count + "번 째 알림 </p>");
-        $.post( "https://pushalot.com/api/sendmessage", 
-          { 
-            "AuthorizationToken": "5b2e4ba7c1734cd7b412acf23d7a7f07", 
-            "Body": count + "번 :" + lat+","+lng 
+        var d = new Date();
+        if( d.getHours() >= 9) {
+          navigator.geolocation.clearWatch(wpid);
+          return;
+        }
+
+        if(!localStorage['routeId']) localStorage['routeId'] = "";
+        var runningLog = new RunningLog();
+
+        var point = new Parse.GeoPoint({latitude: lat, longitude: lng});
+        runningLog.set("route", {"__type":"Pointer","className":"MonthlyRoute","objectId":localStorage['routeId']});
+        runningLog.set("location", point);
+
+        runningLog.save(null, {
+          success: function(runningLog) {
+            $("#log").append("<p>"+ count + "회 전송 중" + "</p>");
+            count ++;
+          },
+          error: function(runningLog, error) {
+            console.log('Failed to create new object, with error code: ' + error.message);
           }
-        ) 
-        .done(function( data ) {
-          console.log( data );
         });
-        count ++;
-      }, 10000);
+      }
+
+      function saveRouteId() {
+        localStorage['routeId'] = $("#routeId").val();
+      }
+
     </script>
   </body>
 </html>
