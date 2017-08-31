@@ -1,78 +1,12 @@
+
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>테스트</title>
-    <style>
-    </style>
+    <title>서강 스포트랑트 1화</title>
   </head>
   <body>
-  <input id="routeId" placeholder="노선 ID입력">
-  <button onClick="saveRouteId()"></button>
-  <p id="result"></p>
-  <div id="log">
-    
-  </div>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="//www.parsecdn.com/js/parse-1.6.7.min.js"></script>
-    <script type="text/javascript">
-
-      var lat = 0;
-      var lng = 0;
-      var count = 0;
-      Parse.initialize('eRm640kNvozWNgmmnqAneyJLbXPWh5KwhKSkzn1B', 'pPHnbrqZL4EpRwjW1mXh8S2JBzEO93coQwuTjGib');
-      var RunningLog = Parse.Object.extend("RunningLog");
-
-      setInterval( postLocation, 4000);
-      var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-
-      function geo_success(position) {
-        $("#result").html(position.coords.latitude + "," + position.coords.longitude);
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
-      }
-
-      function geo_error() {
-        $("#result").html("위치 정보를 사용할 수 없습니다.");
-        console.log("위치 정보를 사용할 수 없습니다.");
-      }
-
-      var geo_options = {
-        enableHighAccuracy: true, 
-        maximumAge        : 30000, 
-        timeout           : 27000
-      };
-
-      function postLocation() {
-
-        var d = new Date();
-        if( d.getHours() >= 9) {
-          return;
-        }
-
-        if(!localStorage['routeId']) localStorage['routeId'] = "";
-        var runningLog = new RunningLog();
-
-        var point = new Parse.GeoPoint({latitude: lat, longitude: lng});
-        runningLog.set("route", {"__type":"Pointer","className":"MonthlyRoute","objectId":localStorage['routeId']});
-        runningLog.set("location", point);
-
-        runningLog.save(null, {
-          success: function(runningLog) {
-            $("#log").append("<p>"+ count + "회 전송 중" + "</p>");
-            count ++;
-          },
-          error: function(runningLog, error) {
-            console.log('Failed to create new object, with error code: ' + error.message);
-          }
-        });
-      }
-
-      function saveRouteId() {
-        localStorage['routeId'] = $("#routeId").val();
-      }
-
-    </script>
+  	<p>sdsd</p>
+    <img src=""/>
   </body>
 </html>
